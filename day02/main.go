@@ -20,28 +20,28 @@ const (
 	down    direction = "down"
 )
 
+func parseInstruction(str string) instruction {
+	splittedEl := strings.Split(str, " ")
+
+	var direction direction
+	switch splittedEl[0] {
+	case "forward":
+		direction = forward
+	case "up":
+		direction = up
+	case "down":
+		direction = down
+	default:
+		panic(fmt.Sprintf("Invalid direction %s", direction))
+	}
+	amount := utils.ParseInt(splittedEl[1])
+
+	return instruction{direction: direction, amount: amount}
+}
+
 func getInput(path string) []instruction {
 	lines := utils.GetLines(path)
-	parsedElements := []instruction{}
-
-	for _, el := range lines {
-		splittedEl := strings.Split(el, " ")
-
-		var direction direction
-		switch splittedEl[0] {
-		case "forward":
-			direction = forward
-		case "up":
-			direction = up
-		case "down":
-			direction = down
-		default:
-			panic(fmt.Sprintf("Invalid direction %s", direction))
-		}
-		amount := utils.ParseInt(splittedEl[1])
-
-		parsedElements = append(parsedElements, instruction{direction: direction, amount: amount})
-	}
+	parsedElements := utils.Map(lines, parseInstruction)
 
 	return parsedElements
 }

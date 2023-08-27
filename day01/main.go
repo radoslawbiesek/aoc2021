@@ -2,37 +2,13 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
+
+	"github.com/radoslawbiesek/aoc2021/utils"
 )
 
-func parseInt(str string) int {
-	parsed, err := strconv.Atoi(str)
-
-	if err != nil {
-		panic(fmt.Sprintf("Could not parse %s", str))
-	}
-
-	return parsed
-}
-
 func getInput(path string) []int {
-	data, err := os.ReadFile(path)
-
-	if err != nil {
-		panic(err)
-	}
-
-	content := string(data)
-
-	splittedElements := strings.Split(content, "\n")
-	parsedElements := []int{}
-
-	for _, el := range splittedElements {
-		parsed := parseInt(el)
-		parsedElements = append(parsedElements, parsed)
-	}
+	lines := utils.GetLines(path)
+	parsedElements := utils.Map(lines, utils.ParseInt)
 
 	return parsedElements
 }
