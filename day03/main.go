@@ -8,7 +8,7 @@ import (
 )
 
 func getInput(path string) (lines []string) {
-	lines = utils.GetLines(path)
+	lines = utils.GetLines(path, "\n")
 	return
 }
 

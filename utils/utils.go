@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func GetLines(path string) []string {
+func GetLines(path, separator string) []string {
 	data, err := os.ReadFile(path)
 
 	if err != nil {
@@ -15,13 +15,13 @@ func GetLines(path string) []string {
 	}
 
 	content := string(data)
-	lines := strings.Split(content, "\n")
+	lines := strings.Split(content, separator)
 
 	return lines
 }
 
 func ParseInt(str string) int {
-	parsed, err := strconv.Atoi(str)
+	parsed, err := strconv.Atoi(strings.TrimSpace(str))
 
 	if err != nil {
 		panic(fmt.Sprintf("Could not parse %s", str))
@@ -32,4 +32,8 @@ func ParseInt(str string) int {
 
 func CharAt(str string, index int) string {
 	return fmt.Sprintf("%c", str[index])
+}
+
+func IsNonEmptyStr(str string) bool {
+	return strings.TrimSpace(str) != ""
 }

@@ -7,7 +7,7 @@ import (
 )
 
 func getInput(path string) []int {
-	lines := utils.GetLines(path)
+	lines := utils.GetLines(path, "\n")
 	parsedElements := utils.Map(lines, utils.ParseInt)
 
 	return parsedElements

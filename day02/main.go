@@ -40,7 +40,7 @@ func parseInstruction(str string) instruction {
 }
 
 func getInput(path string) []instruction {
-	lines := utils.GetLines(path)
+	lines := utils.GetLines(path, "\n")
 	parsedElements := utils.Map(lines, parseInstruction)
 
 	return parsedElements
