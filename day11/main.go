@@ -53,19 +53,21 @@ func (g *grid) setValue(p point, value int) {
 }
 
 func (g *grid) step() (flashes int) {
-	queue := queue{}
+	queue := utils.Queue[point]{}
 	points := g.getAllPoints()
-	queue = append(queue, points...)
+	for _, point := range points {
+		queue.Enqueue(point)
+	}
 
-	for len(queue) > 0 {
-		p := queue.dequeue()
-		curr := g.getValue(p)
+	for queue.Len > 0 {
+		p, _ := queue.Dequeue()
+		curr := g.getValue(*p)
 		new := curr + 1
-		g.setValue(p, new)
+		g.setValue(*p, new)
 		if new == 10 {
 			flashes++
-			for _, n := range getNeighbors(*g, p) {
-				queue.enqueue(n)
+			for _, n := range getNeighbors(*g, *p) {
+				queue.Enqueue(n)
 			}
 		}
 	}
@@ -98,18 +100,6 @@ func getNeighbors(grid grid, curr point) (points []point) {
 			points = append(points, next)
 		}
 	}
-	return
-}
-
-type queue []point
-
-func (q *queue) enqueue(p point) {
-	*q = append(*q, p)
-}
-
-func (q *queue) dequeue() (p point) {
-	p = (*q)[0]
-	*q = (*q)[1:]
 	return
 }
 

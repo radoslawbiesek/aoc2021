@@ -108,18 +108,6 @@ func getNeighbors(heightmap heightmap, curr point) (points []point) {
 	return
 }
 
-type queue []point
-
-func (q *queue) enqueue(p point) {
-	*q = append(*q, p)
-}
-
-func (q *queue) dequeue() (p point) {
-	p = (*q)[0]
-	*q = (*q)[1:]
-	return
-}
-
 const MAX_BASIN_HEIGHT = 8
 
 func part2(path string) int {
@@ -130,22 +118,23 @@ func part2(path string) int {
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
 			startPoint := point{x: x, y: y}
-			queue := queue{startPoint}
+			queue := utils.Queue[point]{}
+			queue.Enqueue(startPoint)
 			basin := map[point]bool{}
 
-			for len(queue) > 0 {
-				currPoint := queue.dequeue()
-				if basin[currPoint] {
+			for queue.Length > 0 {
+				currPoint, _ := queue.Dequeue()
+				if basin[*currPoint] {
 					continue
 				}
-				basin[currPoint] = true
+				basin[*currPoint] = true
 
-				for _, nextPoint := range getNeighbors(heightmap, currPoint) {
+				for _, nextPoint := range getNeighbors(heightmap, *currPoint) {
 					currHeight := heightmap[currPoint.y][currPoint.x]
 					nextHeight := (heightmap)[nextPoint.y][nextPoint.x]
 
 					if currHeight < nextHeight && nextHeight <= MAX_BASIN_HEIGHT {
-						queue.enqueue(nextPoint)
+						queue.Enqueue(nextPoint)
 					}
 				}
 			}
