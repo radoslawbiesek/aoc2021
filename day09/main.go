@@ -122,7 +122,7 @@ func part2(path string) int {
 			queue.Enqueue(startPoint)
 			basin := map[point]bool{}
 
-			for queue.Length > 0 {
+			for queue.Len > 0 {
 				currPoint, _ := queue.Dequeue()
 				if basin[*currPoint] {
 					continue
