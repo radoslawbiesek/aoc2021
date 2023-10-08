@@ -8,15 +8,7 @@ import (
 	"github.com/radoslawbiesek/aoc2021/utils"
 )
 
-type heightmap [][]int
-
-func (h heightmap) getDimensions() (width, height int) {
-	width = len(h[0])
-	height = len(h)
-	return
-}
-
-func getInput(path string) (heightmap heightmap) {
+func getInput(path string) (heightmap utils.Grid) {
 	lineStrings := utils.GetLines(path, "\n")
 	for _, lineStr := range lineStrings {
 		line := []int{}
@@ -38,7 +30,7 @@ func sum(slice []int) (total int) {
 
 func part1(path string) int {
 	heightmap := getInput(path)
-	width, height := heightmap.getDimensions()
+	width, height := heightmap.GetDimensions()
 	riskLevels := []int{}
 
 	for y := 0; y < height; y++ {
@@ -81,46 +73,19 @@ func part1(path string) int {
 	return sum(riskLevels)
 }
 
-type point struct {
-	x, y int
-}
-
-type direction struct {
-	x, y int
-}
-
-var directions = [4]direction{
-	{y: -1, x: 0}, // up
-	{y: 0, x: 1},  // right
-	{y: 1, x: 0},  // down
-	{y: 0, x: -1}, // left
-}
-
-func getNeighbors(heightmap heightmap, curr point) (points []point) {
-	width, height := heightmap.getDimensions()
-	for _, dir := range directions {
-		next := point{x: curr.x + dir.x, y: curr.y + dir.y}
-		if next.x >= 0 && next.x < width && next.y >= 0 && next.y < height {
-			points = append(points, next)
-		}
-	}
-
-	return
-}
-
 const MAX_BASIN_HEIGHT = 8
 
 func part2(path string) int {
 	heightmap := getInput(path)
-	width, height := heightmap.getDimensions()
+	width, height := heightmap.GetDimensions()
 	largest := []int{0, 0, 0}
 
 	for y := 0; y < height; y++ {
 		for x := 0; x < width; x++ {
-			startPoint := point{x: x, y: y}
-			queue := utils.Queue[point]{}
+			startPoint := utils.Point{X: x, Y: y}
+			queue := utils.Queue[utils.Point]{}
 			queue.Enqueue(startPoint)
-			basin := map[point]bool{}
+			basin := map[utils.Point]bool{}
 
 			for queue.Len > 0 {
 				currPoint, _ := queue.Dequeue()
@@ -129,9 +94,9 @@ func part2(path string) int {
 				}
 				basin[*currPoint] = true
 
-				for _, nextPoint := range getNeighbors(heightmap, *currPoint) {
-					currHeight := heightmap[currPoint.y][currPoint.x]
-					nextHeight := (heightmap)[nextPoint.y][nextPoint.x]
+				for _, nextPoint := range utils.GetNeighbors4(heightmap, *currPoint) {
+					currHeight := heightmap[currPoint.Y][currPoint.X]
+					nextHeight := (heightmap)[nextPoint.Y][nextPoint.X]
 
 					if currHeight < nextHeight && nextHeight <= MAX_BASIN_HEIGHT {
 						queue.Enqueue(nextPoint)
