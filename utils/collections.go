@@ -15,3 +15,13 @@ func Map[T any, U any](collection []T, callback func(T) U) (result []U) {
 	}
 	return
 }
+
+func Has[T comparable](collection []T, el T) bool {
+	for _, currEl := range collection {
+		if currEl == el {
+			return true
+		}
+	}
+
+	return false
+}

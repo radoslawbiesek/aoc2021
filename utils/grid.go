@@ -4,14 +4,14 @@ type direction struct {
 	x, y int
 }
 
-var directions4 = [4]direction{
+var directions4 = []direction{
 	{y: -1, x: 0}, // up
 	{y: 0, x: 1},  // right
 	{y: 1, x: 0},  // down
 	{y: 0, x: -1}, // left
 }
 
-var directions8 = [8]direction{
+var directions8 = []direction{
 	{y: -1, x: -1}, // NW
 	{y: -1, x: 0},  // N
 	{y: -1, x: 1},  // NE
@@ -48,9 +48,9 @@ func (g *Grid) SetValue(p Point, value int) {
 	(*g)[p.Y][p.X] = value
 }
 
-func GetNeighbors4(grid Grid, curr Point) (points []Point) {
+func getNeighbors(grid Grid, curr Point, directions []direction) (points []Point) {
 	width, height := grid.GetDimensions()
-	for _, dir := range directions4 {
+	for _, dir := range directions {
 		next := Point{X: curr.X + dir.x, Y: curr.Y + dir.y}
 		if next.X >= 0 && next.X < width && next.Y >= 0 && next.Y < height {
 			points = append(points, next)
@@ -59,13 +59,10 @@ func GetNeighbors4(grid Grid, curr Point) (points []Point) {
 	return
 }
 
-func Get8Neighbors(grid Grid, curr Point) (points []Point) {
-	width, height := grid.GetDimensions()
-	for _, dir := range directions8 {
-		next := Point{X: curr.X + dir.x, Y: curr.Y + dir.y}
-		if next.X >= 0 && next.X < width && next.Y >= 0 && next.Y < height {
-			points = append(points, next)
-		}
-	}
-	return
+func Get4Neighbors(grid Grid, curr Point) []Point {
+	return getNeighbors(grid, curr, directions4)
+}
+
+func Get8Neighbors(grid Grid, curr Point) []Point {
+	return getNeighbors(grid, curr, directions8)
 }

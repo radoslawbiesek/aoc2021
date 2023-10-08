@@ -94,7 +94,7 @@ func part2(path string) int {
 				}
 				basin[*currPoint] = true
 
-				for _, nextPoint := range utils.GetNeighbors4(heightmap, *currPoint) {
+				for _, nextPoint := range utils.Get4Neighbors(heightmap, *currPoint) {
 					currHeight := heightmap[currPoint.Y][currPoint.X]
 					nextHeight := (heightmap)[nextPoint.Y][nextPoint.X]
 
