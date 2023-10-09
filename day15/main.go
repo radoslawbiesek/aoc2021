@@ -20,6 +20,30 @@ func getGrid(path string) (grid utils.Grid) {
 	return
 }
 
+const MULTIPLIER = 5
+
+func extendGrid(grid utils.Grid) *utils.Grid {
+	width, height := grid.GetDimensions()
+	newHeight := height * MULTIPLIER
+	newWidth := width * MULTIPLIER
+	newGrid := make(utils.Grid, newHeight)
+
+	for rowIdx := 0; rowIdx < newHeight; rowIdx++ {
+		row := make([]int, newWidth)
+		for colIdx := 0; colIdx < newWidth; colIdx++ {
+			num := grid[rowIdx%height][colIdx%width]
+			newNum := num + colIdx/width + rowIdx/height
+			for newNum > 9 {
+				newNum -= 9
+			}
+			row[colIdx] = newNum
+		}
+		newGrid[rowIdx] = row
+	}
+
+	return &newGrid
+}
+
 func gridPointToGraphIndex(grid utils.Grid, point utils.Point) int {
 	width, _ := grid.GetDimensions()
 
@@ -67,10 +91,20 @@ func part1(path string) int {
 	return risk
 }
 
+func part2(path string) int {
+	grid := *extendGrid(getGrid(path))
+	graph := gridToGraph(grid)
+	risk, _ := utils.DijkstraList(graph, 0, len(graph)-1)
+
+	return risk
+}
+
 func main() {
 	fmt.Println("Test input: ")
 	fmt.Printf("Part 1: %d\n", part1("./test-input.txt"))
+	fmt.Printf("Part 2: %d\n", part2("./test-input.txt"))
 	fmt.Println("")
 	fmt.Println("Input: ")
 	fmt.Printf("Part 1: %d\n", part1("./input.txt"))
+	fmt.Printf("Part 2: %d\n", part2("./input.txt"))
 }
